@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+
+<html>
+	<head>		
+		<title>IP address and Network mask converter</title>
+		<meta charset="utf-8">
+		<link rel="stylesheet" type="text/css" href="ipStyle.css" >
+
+		<script>
+			function eight_bits_padding(bin_number){
+				return bin_number.toString().padStart(8, "0") ;
+			}
+
+			function decimal_to_binary(decimal){
+				return eight_bits_padding( parseInt(decimal).toString(2)  );
+			}
+
+			function decimal_to_binary_full_string(input_arr, t, init){
+
+				var j = 1;
+
+				document.getElementById(t + '0').innerHTML = init ;
+
+				for (i=0; i<input_arr.length; i++){
+
+					document.getElementById(t+ j ).innerHTML = decimal_to_binary(input_arr[i]) ;									
+
+					if (i != 3){
+						document.getElementById(t+ (++j) ).innerHTML = "." ;
+
+					}						
+					++j;
+				}
+				
+			}
+
+			function network_address_binary(ip_address, network_mask, t, init){
+
+				var j = 1;
+
+				document.getElementById(t + '0').innerHTML = init ;
+
+				for (i=0; i<ip_address.length; i++){
+
+					document.getElementById(t+ j ).innerHTML = decimal_to_binary( (ip_address[i] & network_mask[i]) );
+
+					if (i != 3){
+						document.getElementById(t+ (++j) ).innerHTML = "." ;
+
+					}						
+					++j;
+				}
+
+			}
+
+			function network_address_decimal(ip_address, network_mask, t, init){
+
+				var _network_address = "";
+
+				for (i=0; i<ip_address.length; i++){
+
+					_network_address += parseInt(decimal_to_binary((ip_address[i] & network_mask[i]) ), 2);
+
+					if ( i<(ip_address.length-1) ){ _network_address += "."; };
+				}
+
+				document.getElementById( t + '0' ).innerHTML = init ;
+				document.getElementById( t + '1' ).innerHTML = _network_address ;
+				
+			}
+
+			function input_breakdown(){
+
+				var first_four = [], last_four = [];
+
+				var i;
+				for (i=0; i<8; i++){
+					
+					
+					if (i<4){ 
+						first_four.push(document.getElementById('input_' + i).value ); 
+					}
+					else{
+						last_four.push(document.getElementById('input_' + i).value );
+					}
+				}
+
+				return [first_four, last_four];
+			}
+
+			function conversion(){		
+				
+				var i;
+				for (i=0; i<8; i++){
+					
+					
+					if (!document.getElementById('input_' + i).value){
+						alert("Some fields are empty!");
+						return;
+					}
+
+				}
+
+				var ip_address = [], network_mask = [];
+				var buffer = input_breakdown();
+
+				ip_address = buffer[0];
+				network_mask = buffer[1];
+
+
+				decimal_to_binary_full_string(ip_address, 'ip_', "Διεύθυνση IP σε δυαδική μορφή: ") ;
+				decimal_to_binary_full_string(network_mask, 'mask_', "Μάσκα σε δυαδική μορφή: ") ;
+				network_address_binary(ip_address, network_mask, 'net_bin_', "Διεύθυνση Δικτύου σε δυαδική μορφή: ") ;
+				network_address_decimal(ip_address, network_mask, 'net_dec_', "Διεύθυνση Δικτύου σε δεκαδική μορφή: ") ;
+
+			}
+
+			function clearAll(){
+				document.getElementById('net_dec_0').innerHTML = "";
+				document.getElementById('net_dec_1').innerHTML = "";
+
+				for (i=0; i<8; i++){
+					document.getElementById('ip_' + i).innerHTML = "";
+					document.getElementById('mask_' + i).innerHTML = "";
+					document.getElementById('net_bin_' + i).innerHTML = "";
+				}
+				
+			}
+		</script>
+	</head>
+	<body>
+	<form >
+		Διεύθυνση IPv4 (Υπολογιστής ή δίκτυο) Μάσκα Δικτύου
+		<br>
+		<input type="text" id="input_0" placeholder="192" size="3" maxlength="3"> -
+		<input type="text" id="input_1" placeholder="100" size="3" maxlength="3"> -
+		<input type="text" id="input_2" placeholder="10"  size="3" maxlength="3"> -
+		<input type="text" id="input_3" placeholder="200" size="3" maxlength="3"> /
+		<input type="text" id="input_4" placeholder="255" size="3" maxlength="3"> -
+		<input type="text" id="input_5" placeholder="255" size="3" maxlength="3"> -
+		<input type="text" id="input_6" placeholder="255" size="3" maxlength="3"> -
+		<input type="text" id="input_7" placeholder="240" size="3" maxlength="3">
+		<br><br>
+		<input type="button" onClick="conversion()" value="Υπολογισμός">
+		<input type="reset" onClick="clearAll()" value="Καθαρισμός">
+	</form>
+	<br>
+	<table id="myTable">
+  		<tbody>
+    		<tr>
+				  <td id="ip_0">    		 </td>
+				  <td id="ip_1" style="text-align: center;">    		 </td>
+				  <td id="ip_2" style="text-align: center;">    		 </td>
+				  <td id="ip_3" style="text-align: center;">    		 </td>
+				  <td id="ip_4" style="text-align: center;">    		 </td>
+				  <td id="ip_5" style="text-align: center;">    		 </td>
+				  <td id="ip_6" style="text-align: center;">    		 </td>
+				  <td id="ip_7" style="text-align: center;">    		 </td>
+			</tr>
+			
+    		<tr>
+				  <td id="mask_0">    		 </td>
+				  <td id="mask_1" style="text-align: center;">    		 </td>
+				  <td id="mask_2" style="text-align: center;">    		 </td>
+				  <td id="mask_3" style="text-align: center;">    		 </td>
+				  <td id="mask_4" style="text-align: center;">    		 </td>
+				  <td id="mask_5" style="text-align: center;">    		 </td>
+				  <td id="mask_6" style="text-align: center;">    		 </td>
+				  <td id="mask_7" style="text-align: center;">    		 </td>
+			</tr>
+			
+    		<tr>
+				<td id="net_bin_0">    		 </td>
+				<td id="net_bin_1" style="text-align: center;">    		 </td>
+				<td id="net_bin_2" style="text-align: center;">    		 </td>
+				<td id="net_bin_3" style="text-align: center;">    		 </td>
+				<td id="net_bin_4" style="text-align: center;">    		 </td>
+				<td id="net_bin_5" style="text-align: center;">    		 </td>
+				<td id="net_bin_6" style="text-align: center;">    		 </td>
+				<td id="net_bin_7" style="text-align: center;">    		 </td>
+			</tr>
+			
+    		<tr>
+				<td id="net_dec_0">    		 </td>
+				<td id="net_dec_1" colspan = "4"> </td>
+			</tr>
+					  
+  		</tbody>
+	</table>
+	</body>
+</html>
+
