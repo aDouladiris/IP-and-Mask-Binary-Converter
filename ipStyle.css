@@ -22,3 +22,12 @@ table {
     font-style: italic;
 
 }
+
+td {
+  text-align: center;
+}
+
+#ip_0, #mask_0, #net_bin_0, #net_dec_0, #net_dec_1 {
+  text-align: left;
+}
+
